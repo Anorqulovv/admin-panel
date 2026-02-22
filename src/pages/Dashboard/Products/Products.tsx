@@ -17,7 +17,7 @@ const Products = () => {
       try {
         setLoading(true);
         const res = await instance().get<ProductType[]>("/products",{
-          params: {title,categoryId}
+          params: {title,categoryId:categoryId == "all" ? "" : categoryId }
         });
         setProducts(res.data);
       } finally {
@@ -35,14 +35,11 @@ const Products = () => {
       <div className="absolute inset-x-0 top-0 h-px -z-10 bg-[linear-gradient(to_right,transparent,rgba(34,211,238,0.9),rgba(217,70,239,0.85),rgba(99,102,241,0.55),transparent)]" />
 
       <div className="h-full bg-white/5 backdrop-blur-2xl flex flex-col">
-        {/* top bar */}
         <div className="p-4">
           <div className="flex items-center justify-between gap-4 rounded-3xl bg-white/5 ring-1 ring-white/10 px-4 py-3 shadow-[0_10px_35px_rgba(0,0,0,0.35)]">
             <div className="flex items-center gap-4">
-              {/* Input... */}
                 <Input onChange={e => setSearch(e.target.value)} type="text" />
               <div className="min-w-55">
-                {/* Sizning Select componentingiz controlled bo‘lsa shunaqa: */}
                 <Select value={categoryId} URL="/categories" setValue={setCategoryID} />
               </div>
             </div>
@@ -61,7 +58,6 @@ const Products = () => {
           </div>
         </div>
 
-        {/* content */}
         <div className="px-4 pb-4 flex-1 overflow-auto">
           {loading && (
             <div className="mb-4 rounded-3xl bg-white/5 ring-1 ring-white/10 p-4 text-white/70">
