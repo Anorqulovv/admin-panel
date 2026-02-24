@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-import { CategoryCard, Input } from "../../../components";
+import { CategoryCard, Input, PATH } from "../../../components";
 import Button from "../../../components/Button";
-import { HiOutlineTag } from "react-icons/hi2";
 import type { CategoryType } from "../../../@types";
 import { GetById } from "../../../services";
+import { useNavigate } from "react-router-dom";
 
 
 const Category = () => {
   const [categories, setCategories] = useState<CategoryType[]>([])
+
+  const navigete = useNavigate()
 
   useEffect(()=> {
     GetById("/categories",setCategories)
@@ -37,14 +39,10 @@ const Category = () => {
                   placeholder="Kategoriya qidirish..."
                   type="text"
                 />
-
-                <div className="flex items-center gap-2 text-white/55 text-xs sm:text-sm">
-                  <HiOutlineTag className="text-[16px]" />
-                  <span> ta kategoriya</span>
-                </div>
               </div>
 
               <Button
+                onClick={()=> navigete(PATH.categoriesCreate)}
                 extraClass="!mt-0 !w-full lg:!w-[140px] !h-11 !rounded-2xl !bg-[linear-gradient(135deg,#22d3ee,#d946ef,#6366f1)] !shadow-[0_0_18px_rgba(99,102,241,0.28)] hover:!brightness-110"
                 type="button"
               >

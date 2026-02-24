@@ -2,25 +2,28 @@ import { useEffect, useState } from "react";
 import Button from "../../../components/Button";
 import { FiHash, FiImage } from "react-icons/fi";
 import { HiOutlineTag } from "react-icons/hi2";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import type { CategoryType } from "../../../@types";
-import { GetById } from "../../../services";
-import { MiniButton } from "../../../components";
+import { DeleteFn, GetById } from "../../../services";
+import { Loading, MiniButton, Modal } from "../../../components";
 import { AiFillDelete } from "react-icons/ai";
 
 const CategoryMore = () => {
   const [category, setCategory] = useState<CategoryType<any>>([]);
   const { id } = useParams();
 
-  // const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false)
   const [delModal, setDelModal] = useState<boolean>(false)
-  // const navigate = useNavigate()
+  const navigate = useNavigate()
 
   useEffect(() => {
     GetById(`categories/${id}`, setCategory);
   }, [id]);
 
-  console.log(category);
+  function handleDelete(){
+    setLoading(true)
+    DeleteFn(`/categories/${id}`, setLoading, setDelModal, "Categoriya o'chirildi", navigate)
+  }
 
   return (
     <section className="relative w-full p-3 sm:p-4">
@@ -55,6 +58,7 @@ const CategoryMore = () => {
                   </MiniButton>
 
                   <Button
+                    onClick={() => navigate("update")}
                     type="button"
                     extraClass="!mt-0 !w-full lg:!w-[160px] !h-12.5 !rounded-2xl !bg-[linear-gradient(135deg,#22d3ee,#d946ef,#6366f1)] !shadow-[0_0_18px_rgba(99,102,241,0.28)] hover:!brightness-110"
                   >
@@ -177,6 +181,31 @@ const CategoryMore = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal */}
+      <Modal
+        open={delModal}
+        onClose={() => setDelModal(false)}
+        title="Categoryni ochirmoqchimisiz!"
+      >
+        <div className="flex flex-col gap-3 sm:flex-row sm:justify-end sm:gap-4">
+          <Button
+            onClick={() => setDelModal(false)}
+            extraClass="w-[150px]"
+            type="button"
+          >
+            Bekor qilish
+          </Button>
+
+          <Button
+            onClick={handleDelete}
+            extraClass="w-[150px]"
+            type="button"
+          >
+            {loading ? <Loading /> : "O'chirish"}
+          </Button>
+        </div>
+      </Modal>
     </section>
   );
 };
