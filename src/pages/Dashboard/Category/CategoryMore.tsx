@@ -9,7 +9,7 @@ import { Loading, MiniButton, Modal } from "../../../components";
 import { AiFillDelete } from "react-icons/ai";
 
 const CategoryMore = () => {
-  const [category, setCategory] = useState<CategoryType<any>>([]);
+  const [category, setCategory] = useState<CategoryType>();
   const { id } = useParams();
 
   const [loading, setLoading] = useState<boolean>(false)
@@ -45,7 +45,7 @@ const CategoryMore = () => {
                     Category details
                   </p>
                   <h1 className="mt-1 text-white text-xl sm:text-2xl font-semibold truncate">
-                    {category.name}
+                    {category?.name}
                   </h1>
                   <p className="mt-1 text-white/50 text-sm">
                     Kategoriya haqida ma’lumot
@@ -75,8 +75,8 @@ const CategoryMore = () => {
             <div className="overflow-hidden rounded-3xl bg-white/5 ring-1 ring-white/10 shadow-[0_18px_45px_rgba(0,0,0,0.25)]">
               <div className="relative h-145 overflow-hidden">
                 <img
-                  src={category.image}
-                  alt={category.name}
+                  src={category?.image}
+                  alt={category?.name}
                   className="h-full w-full object-cover"
                   onError={(e) => {
                     (e.currentTarget as HTMLImageElement).src =
@@ -90,11 +90,11 @@ const CategoryMore = () => {
                 <div className="absolute left-4 top-4 flex flex-wrap items-center gap-2">
                   <span className="inline-flex items-center gap-2 rounded-full bg-white/10 ring-1 ring-white/10 px-3 py-1 text-xs text-white/90 backdrop-blur">
                     <FiHash className="text-[12px]" />
-                    ID: {category.id}
+                    ID: {category?.id}
                   </span>
 
                   <span className="inline-flex items-center gap-2 rounded-full bg-white/10 ring-1 ring-white/10 px-3 py-1 text-xs text-white/90 backdrop-blur">
-                    <HiOutlineTag className="text-[13px]" />#{category.slug}
+                    <HiOutlineTag className="text-[13px]" />#{category?.slug}
                   </span>
                 </div>
 
@@ -105,11 +105,11 @@ const CategoryMore = () => {
                       Preview
                     </p>
                     <h2 className="mt-1 text-white text-lg sm:text-xl font-semibold">
-                      {category.name}
+                      {category?.name}
                     </h2>
                     <p className="mt-1 text-sm text-white/60">
                       Slug:{" "}
-                      <span className="text-white/80">#{category.slug}</span>
+                      <span className="text-white/80">#{category?.slug}</span>
                     </p>
 
                     <div className="mt-3 h-0.5 w-16 rounded-full bg-[linear-gradient(135deg,#22d3ee,#d946ef,#6366f1)] opacity-80" />
@@ -129,20 +129,20 @@ const CategoryMore = () => {
                 <div className="mt-4 space-y-3">
                   <div className="rounded-2xl bg-black/15 ring-1 ring-white/10 p-4">
                     <p className="text-white/45 text-xs">ID</p>
-                    <p className="mt-1 text-white font-medium">{category.id}</p>
+                    <p className="mt-1 text-white font-medium">{category?.id}</p>
                   </div>
 
                   <div className="rounded-2xl bg-black/15 ring-1 ring-white/10 p-4">
                     <p className="text-white/45 text-xs">Nomi</p>
                     <p className="mt-1 text-white font-medium">
-                      {category.name}
+                      {category?.name}
                     </p>
                   </div>
 
                   <div className="rounded-2xl bg-black/15 ring-1 ring-white/10 p-4">
                     <p className="text-white/45 text-xs">Slug</p>
                     <p className="mt-1 text-white font-medium">
-                      #{category.slug}
+                      #{category?.slug}
                     </p>
                   </div>
                 </div>
@@ -162,7 +162,7 @@ const CategoryMore = () => {
                     <div className="min-w-0">
                       <p className="text-white/45 text-xs">Rasm URL</p>
                       <p className="mt-1 text-sm text-white/85 break-all">
-                        {category.image}
+                        {category?.image}
                       </p>
                     </div>
                   </div>

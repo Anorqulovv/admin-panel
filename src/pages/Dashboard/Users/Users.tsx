@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiMail } from "react-icons/fi";
 import { HiOutlineShieldCheck } from "react-icons/hi2";
 import type { UserType } from "../../../@types";
@@ -9,9 +9,9 @@ import { PATH } from "../../../components";
 const Users = () => {
   const [users,setUsers] = useState<UserType[]>([])
 
-  useState(()=>{
+  useEffect(()=>{
     instance().get(PATH.users).then(res => setUsers(res.data))
-  },[])
+  },[users])
   
   return (
     <section className="relative h-[95%] overflow-hidden rounded-3xl ring-1 ring-white/10 shadow-[0_12px_55px_rgba(0,0,0,0.55)]">
