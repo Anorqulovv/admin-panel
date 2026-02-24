@@ -12,6 +12,9 @@ const PATH = {
     categoriesMore: '/categories/:id',
     categoriesCreate: '/categories/create',
     categoriesUpdate: '/categories/:id/update',
+    usersMore: '/users:id',
+    usersCreate: '/users/create',
+    usersUpdate: '/users/:id/update',
     users: '/users',
     notFound: '*'
 }

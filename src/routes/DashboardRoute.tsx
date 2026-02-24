@@ -6,6 +6,8 @@ import ProductsMore from "../pages/Dashboard/Products/ProductsMore"
 import ProductCrud from "../pages/Dashboard/Products/ProductCrud"
 import CategoryCrud from "../pages/Dashboard/Category/CategoryCrud"
 import CategoryMore from "../pages/Dashboard/Category/CategoryMore"
+import UserCrud from "../pages/Dashboard/Users/UserCrud"
+import UserMore from "../pages/Dashboard/Users/UserMore"
 
 const DashboardRoute = () => {
     const routeList = [
@@ -19,7 +21,11 @@ const DashboardRoute = () => {
         { id: 8, path: PATH.productsCreate, element: <ProductCrud />},
         { id: 9, path: PATH.categoriesMore, element: <CategoryMore />},
         { id: 10, path: PATH.categoriesUpdate, element: <CategoryCrud />},
-        { id: 11, path: PATH.categoriesCreate, element: <CategoryCrud />}
+        { id: 11, path: PATH.categoriesCreate, element: <CategoryCrud />},
+        { id: 12, path: PATH.usersMore, element: <UserMore />},
+        { id: 13, path: PATH.usersCreate, element: <UserCrud />},
+        { id: 14, path: PATH.usersUpdate, element: <UserCrud />}
+
     ]
     return (
         <div className="flex">
