@@ -1,14 +1,20 @@
 import type { FC } from "react";
 import { HiOutlineTag } from "react-icons/hi";
 import type { ProductType } from "../@types";
+import { useNavigate } from "react-router-dom";
 
 interface ProductCardProps {
   p: ProductType;
 }
 
 const ProductCard: FC<ProductCardProps> = ({ p }) => {
+  const navigate = useNavigate();
+
+  function handleMore() {
+    navigate(`/products/${p.id}`);
+  }
   return (
-    <div className="cursor-pointer group relative overflow-hidden rounded-[28px] bg-white/4 ring-1 ring-white/10 shadow-[0_22px_70px_rgba(0,0,0,0.45)] transition-all duration-300 hover:-translate-y-1 hover:bg-white/6">
+    <div onClick={handleMore} className="cursor-pointer group relative overflow-hidden rounded-[28px] bg-white/4 ring-1 ring-white/10 shadow-[0_22px_70px_rgba(0,0,0,0.45)] transition-all duration-300 hover:-translate-y-1 hover:bg-white/6">
       {/* gradient border glow */}
       <div className="pointer-events-none absolute inset-0 opacity-0 transition duration-300 group-hover:opacity-100">
         <div className="absolute -inset-0.5 rounded-[30px] bg-[linear-gradient(135deg,rgba(34,211,238,0.45),rgba(217,70,239,0.35),rgba(99,102,241,0.35))] blur-xl" />

@@ -8,8 +8,8 @@ interface SelectType {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   customList?: any[];
   onChange?: SelectHTMLAttributes<HTMLSelectElement>;
-  setValue: Dispatch<SetStateAction<string>>;
-  value: string;
+  setValue?: Dispatch<SetStateAction<string>>;
+  value?: string | number;
 }
 
 const Select: FC<SelectType> = ({extraClass, URL, customList, setValue, value}) => {
@@ -19,10 +19,10 @@ const Select: FC<SelectType> = ({extraClass, URL, customList, setValue, value}) 
     if(URL){
       instance().get(URL).then(res => setlist(res.data))
     }
-  },[])
+  },[URL])
 
   const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) =>{
-      setValue(e.target.value)
+      if(setValue) setValue(e.target.value)
   }
 
   return (
