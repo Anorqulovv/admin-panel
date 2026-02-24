@@ -3,12 +3,14 @@ import { instance, useDebounce } from "../../../hooks";
 import ProductCard from "../../../components/ProductCard";
 import type { ProductType } from "../../../@types";
 import { Button, Input, Select } from "../../../components";
+import { useNavigate } from "react-router-dom";
 
 const Products = () => {
   const [search, setSearch] = useState<string>("")
   const [products, setProducts] = useState<ProductType[]>([]);
   const [loading, setLoading] = useState(false);
   const [categoryId, setCategoryID] = useState<string>("all");
+  const navigate = useNavigate()
 
   const title = useDebounce(search,1000)
 
@@ -44,7 +46,7 @@ const Products = () => {
               </div>
             </div>
 
-            <Button type="button" extraClass="w-[100px]">Yaratish</Button>
+            <Button onClick={() => navigate("create")} type="button" extraClass="!w-[100px] cursor-pointer ">Yaratish</Button>
           </div>
 
           <div className="mt-4 flex items-end justify-between">
