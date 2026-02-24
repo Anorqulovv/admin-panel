@@ -1,25 +1,50 @@
-import { useEffect, useState, type MouseEvent } from "react";
+import { useEffect, useState, type ChangeEvent } from "react";
 import type { UserType } from "../../../@types";
-import { instance } from "../../../hooks";
-import { MiniButton, PATH, UsersCard } from "../../../components";
-
+import { instance, useDebounce } from "../../../hooks";
+import { Input, MiniButton, PATH, UsersCard } from "../../../components";
 
 const Users = () => {
-  const [users,setUsers] = useState<UserType[]>([])
-  const [roleFilter, setRoleFilter] = useState<"all" | "customer" | "admin">("all");
+  const [users, setUsers] = useState<UserType[]>([]);
+  const [search, setSearch] = useState<string>("");
+  const [roleFilter, setRoleFilter] = useState<"all" | "customer" | "admin">(
+    "all"
+  );
+
+  const debounce = useDebounce(search, 1000);
+
+  function changeInput(e: ChangeEvent<HTMLInputElement>) {
+    setSearch(e.target.value);
+  }
+
+  function handleSubmit(role: "all" | "customer" | "admin") {
+    setRoleFilter(role);
+  }
 
   useEffect(() => {
-    instance().get(PATH.users).then((res) => setUsers(res.data));
+    instance()
+      .get(PATH.users)
+      .then((res) => {
+        setUsers(Array.isArray(res.data) ? res.data : []);
+      })
+      .catch((err) => {
+        console.log("Users fetch error:", err);
+        setUsers([]);
+      });
   }, []);
 
-  function hadleSubmit(e: MouseEvent<HTMLButtonElement>) {
-    const text = e.currentTarget.textContent?.trim();
-    if (text === "Hammasi") setRoleFilter("all");
-    if (text === "customer") setRoleFilter("customer");
-    if (text === "admin") setRoleFilter("admin");
-  }
-  const filteredUsers = roleFilter === "all" ? users: users.filter((u) => u.role === roleFilter);
-  
+  const filteredUsers = users.filter((u) => {
+    const q = debounce.trim().toLowerCase();
+
+    const matchesSearch =
+      !q ||
+      u.name?.toLowerCase().includes(q) ||
+      u.email?.toLowerCase().includes(q);
+
+    const matchesRole = roleFilter === "all" ? true : u.role === roleFilter;
+
+    return matchesSearch && matchesRole;
+  });
+
   return (
     <section className="relative h-[95%] overflow-hidden rounded-3xl ring-1 ring-white/10 shadow-[0_12px_55px_rgba(0,0,0,0.55)]">
       {/* background */}
@@ -30,8 +55,8 @@ const Users = () => {
       <div className="h-full bg-white/5 backdrop-blur-2xl flex flex-col">
         {/* header */}
         <div className="p-4 sm:p-5">
-          <div className="rounded-3xl bg-white/5 ring-1 ring-white/10 p-4 shadow-[0_10px_35px_rgba(0,0,0,0.35)]">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-4 lg:flex-row lg:justify-between lg:items-center rounded-3xl bg-white/5 ring-1 ring-white/10 p-4 shadow-[0_10px_35px_rgba(0,0,0,0.35)]">
+            <div className="flex flex-col gap-2">
               <div className="min-w-0">
                 <p className="text-white/45 text-xs tracking-[0.22em] uppercase">
                   Users
@@ -40,35 +65,80 @@ const Users = () => {
                   Foydalanuvchilar ro‘yxati
                 </h2>
                 <p className="mt-1 text-white/50 text-sm">
-                  Test ma’lumotlar asosida UI preview
+                  {filteredUsers.length} ta foydalanuvchi topildi
                 </p>
+              </div>
+
+              <div className="mt-4 flex flex-wrap items-center gap-2">
+                <MiniButton
+                  type="button"
+                  onClick={() => handleSubmit("all")}
+                  extraClass={`w-[70px] h-[25px] text-[12px] cursor-pointer rounded-full px-1 text-xs ring-1 transition ${
+                    roleFilter === "all"
+                      ? "bg-white text-black ring-white"
+                      : "bg-white/10 ring-white/15 text-white"
+                  }`}
+                >
+                  Hammasi
+                </MiniButton>
+
+                <MiniButton
+                  type="button"
+                  onClick={() => handleSubmit("customer")}
+                  extraClass={`w-[70px] h-[25px] text-[12px] cursor-pointer rounded-full px-1 text-xs ring-1 transition ${
+                    roleFilter === "customer"
+                      ? "bg-white text-black ring-white"
+                      : "bg-white/10 ring-white/15 text-white"
+                  }`}
+                >
+                  customer
+                </MiniButton>
+
+                <MiniButton
+                  type="button"
+                  onClick={() => handleSubmit("admin")}
+                  extraClass={`w-[70px] h-[25px] text-[12px] cursor-pointer rounded-full px-1 text-xs ring-1 transition ${
+                    roleFilter === "admin"
+                      ? "bg-white text-black ring-white"
+                      : "bg-white/10 ring-white/15 text-white"
+                  }`}
+                >
+                  admin
+                </MiniButton>
               </div>
             </div>
 
-            <div className="mt-4 h-px w-full bg-linear-to-r from-transparent via-white/10 to-transparent" />
-
-            {/* static pills */}
-            <div className="mt-4 flex flex-wrap items-center gap-2">
-              <MiniButton onClick={(e) => hadleSubmit(e)} extraClass="w-[70px] h-[25px] text-[12px] cursor-pointer rounded-full px-1 text-xs ring-1 bg-white/10 ring-white/15 text-white">
-                  Hammasi
-              </MiniButton>
-              <MiniButton onClick={(e) => hadleSubmit(e)} extraClass="w-[70px] h-[25px] text-[12px] cursor-pointer rounded-full px-1 text-xs ring-1 bg-white/10 ring-white/15 text-white">
-                  customer
-              </MiniButton>
-              <MiniButton onClick={(e) => hadleSubmit(e)} extraClass="w-[70px] h-[25px] text-[12px] cursor-pointer rounded-full px-1 text-xs ring-1 bg-white/10 ring-white/15 text-white">
-                  admin
-              </MiniButton>
+            <div className="w-full lg:w-75">
+              <Input
+                value={search}
+                onChange={changeInput}
+                type="text"
+                placeholder="Search users..."
+              />
             </div>
           </div>
         </div>
 
         {/* grid */}
         <div className="px-4 sm:px-5 pb-5 flex-1 overflow-auto">
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-            {filteredUsers.map((u) => (
-              <UsersCard u={u} key={u.id} />
-            ))}
-          </div>
+          {filteredUsers.length > 0 ? (
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+              {filteredUsers.map((u) => (
+                <UsersCard u={u} key={u.id} />
+              ))}
+            </div>
+          ) : (
+            <div className="h-full min-h-55 grid place-items-center rounded-3xl bg-white/5 ring-1 ring-white/10">
+              <div className="text-center">
+                <p className="text-white/80 text-lg font-medium">
+                  Foydalanuvchi topilmadi
+                </p>
+                <p className="mt-1 text-white/45 text-sm">
+                  Qidiruv yoki filter ni o‘zgartirib ko‘ring
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </section>

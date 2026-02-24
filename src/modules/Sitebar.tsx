@@ -1,4 +1,3 @@
-import React from "react";
 import { NavLink } from "react-router-dom";
 import { PATH } from "../components";
 
@@ -21,6 +20,7 @@ const Sitebar = () => {
     { label: "Kategoriyalar", href: PATH.category, icon: <BiCategoryAlt className="text-[18px]" /> },
     { label: "Foydalanuvchilar", href: PATH.users, icon: <HiOutlineUsers className="text-[18px]" /> },
   ];
+
 
   return (
     <aside className="relative h-screen w-[22%] p-4">
