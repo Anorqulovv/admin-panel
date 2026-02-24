@@ -1,17 +1,29 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ChangeEvent } from "react";
 import { CategoryCard, Input, PATH } from "../../../components";
 import Button from "../../../components/Button";
-import type { CategoryType } from "../../../@types";
+import type { CategoryType} from "../../../@types";
 import { GetById } from "../../../services";
 import { useNavigate } from "react-router-dom";
+import { useDebounce } from "../../../hooks";
 
 
 const Category = () => {
   const [categories, setCategories] = useState<CategoryType[]>([])
+  const [search, setSearch] = useState<string>("")
 
   const navigete = useNavigate()
 
-  useEffect(()=> {
+  const debounce = useDebounce(search,1000);
+
+  function changeInput(e:ChangeEvent<HTMLInputElement>){
+    setSearch(e.target.value)
+  }
+
+  const filteredCategories = categories.filter((c: any) => 
+    c.name?.toLowerCase().includes(debounce.trim().toLowerCase())
+  );
+
+  useEffect(() => {
     GetById("/categories",setCategories)
   },[setCategories])
   
@@ -34,6 +46,8 @@ const Category = () => {
             <div className="mt-4 flex flex-col lg:flex-row lg:items-center gap-3 rounded-3xl bg-white/5 ring-1 ring-white/10 p-3 shadow-[0_10px_35px_rgba(0,0,0,0.35)]">
               <div className="flex-1 flex flex-col sm:flex-row sm:items-center gap-3">
                 <Input
+                  value={search}
+                  onChange={changeInput}
                   extraClass="!mt-0 !w-full sm:!max-w-[320px] !border !border-white/10 !bg-white/5 !text-white placeholder:!text-white/40 !px-4 !rounded-2xl"
                   name="search"
                   placeholder="Kategoriya qidirish..."
@@ -71,7 +85,7 @@ const Category = () => {
               </div>
             ) : (
               <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-                {categories.map((c: any) => (
+                {filteredCategories.map((c: any) => (
                   <CategoryCard c={c} key={c.id} />
                 ))}
               </div>

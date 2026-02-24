@@ -18,3 +18,12 @@ export interface ProductType {
     creationAt: string;
     updatedAt: string;
 }
+
+export interface UserType {
+  id: number;
+  email: string;
+  password: string;
+  name: string;
+  role: "customer" | "admin" | string;
+  avatar: string;
+};
