@@ -27,14 +27,29 @@ export const GetById = (URL:string, setValue:Dispatch<SetStateAction<any>>) => {
     setValue(res.data)
   })
 }
-export const DeleteFn = (URL: string, setLoading: Dispatch<SetStateAction<boolean>>,setDelModal: Dispatch<SetStateAction<boolean>>,toastTitle:string,navigate:NavigateFunction) => {
-  instance().delete(URL).then(()=>{
-    setLoading(false)
-    setDelModal(false)
-    toast.success(toastTitle)
-    setTimeout(() => navigate(-1),1000)
-  })
-}
+export const DeleteFn = async (
+  URL: string,
+  setLoading: Dispatch<SetStateAction<boolean>>,
+  setDelModal: Dispatch<SetStateAction<boolean>>,
+  toastTitle: string,
+  navigate: NavigateFunction
+) => {
+  try {
+    await instance().delete(URL);
+
+    toast.success(toastTitle);
+    setDelModal(false);
+
+    setTimeout(() => {
+      navigate(-1);
+    }, 800);
+  } catch (error) {
+    console.error(error);
+    toast.error("O‘chirishda xatolik yuz berdi");
+  } finally {
+    setLoading(false);
+  }
+};
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const CrudFn = (id:string | undefined, URL:string,data:any,setLoading:Dispatch<SetStateAction<boolean>>, navigate:NavigateFunction,toastTitle:string) => {
   instance()[id ? "put" : "post"](URL, data).then(() => {

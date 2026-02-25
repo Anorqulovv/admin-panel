@@ -22,7 +22,7 @@ const CategoryMore = () => {
 
   function handleDelete(){
     setLoading(true)
-    DeleteFn(`/categories/${id}`, setLoading, setDelModal, "Categoriya o'chirildi", navigate)
+    DeleteFn(`/categories/${Number(id)}`, setLoading, setDelModal, "Categoriya o'chirildi", navigate)
   }
 
   return (
