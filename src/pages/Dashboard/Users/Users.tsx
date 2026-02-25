@@ -1,14 +1,18 @@
 import { useEffect, useState, type ChangeEvent } from "react";
 import type { UserType } from "../../../@types";
 import { instance, useDebounce } from "../../../hooks";
-import { Input, MiniButton, PATH, UsersCard } from "../../../components";
+import { Button, Input, MiniButton, PATH, UsersCard } from "../../../components";
+import { useNavigate, useParams } from "react-router-dom";
 
 const Users = () => {
+  const {id} = useParams()
   const [users, setUsers] = useState<UserType[]>([]);
   const [search, setSearch] = useState<string>("");
   const [roleFilter, setRoleFilter] = useState<"all" | "customer" | "admin">(
     "all"
   );
+
+  const navigate = useNavigate()
 
   const debounce = useDebounce(search, 1000);
 
@@ -108,13 +112,16 @@ const Users = () => {
               </div>
             </div>
 
-            <div className="w-full lg:w-75">
+            <div className="flex gap-2.5 w-full lg:w-75">
               <Input
                 value={search}
                 onChange={changeInput}
                 type="text"
                 placeholder="Search users..."
               />
+              <Button type="button" onClick={() => navigate(`/users/create`)} extraClass="inline-flex items-center gap-2 h-12 px-6 !mt-0 rounded-2xl text-white font-semibold bg-[linear-gradient(135deg,#22d3ee,#6366f1,#d946ef)] hover:opacity-90 transition shadow-[0_10px_30px_rgba(99,102,241,.2)]">
+                    {id?"Tahrirlash": "Create"}
+              </Button>
             </div>
           </div>
         </div>
